@@ -1,0 +1,23 @@
+Package: modRMSE
+Type: Model evaluation paramenters
+Title: Evaluate observed vs model predictions.
+Version: 0.1.0
+Authors@R: 
+    person(given = "Giulio",
+           family = "Giagnoni",
+           role = c("aut", "cre"),
+           email = "gigi@anis.au.dk",
+           comment = c(ORCID = "0000-0001-8153-3041"))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: Evaluate models for multiple varibale, multiple models and model type and prediction functions.
+License: MIT license
+Depends:
+    epiR,
+Encoding: UTF-8
+LazyData: true
+VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    rmarkdown,
+    knitr
