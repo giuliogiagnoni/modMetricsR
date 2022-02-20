@@ -14,17 +14,20 @@
 #' @export
 
 
-##  libra
+# devtools::document("C:/Users/AU589897/Documents/Rpackages/modRMSE")
+# devtools::install("C:/Users/AU589897/Documents/Rpackages/modRMSE")
 
-RMSEloop <- function(d, var, MT, m, PF, s) {
+
+RMSEloop <- function(d, var, MT, m, PF = TRUE, s) {
 
   out <- NULL
 
   if(missing(PF) | PF == FALSE){
     for(i in var){
+      for(j in m){
 
           o <- d[[i]]
-          p <- predict(eval(parse(text = paste0(MT, "(", i , "~", m, ",", deparse(substitute(d)), ")"))))
+          p <- predict(eval(parse(text = paste0(MT, "(", i , "~", j, ",", deparse(substitute(d)), ")"))))
 
           data <- data.frame(o, p)
           data$res = data$o - data$p
@@ -79,18 +82,21 @@ RMSEloop <- function(d, var, MT, m, PF, s) {
             stop(sQuote(s), " not implemented")
           }
 
-          Values <- cbind(as.data.frame(rbind(Values)), i, j, j1)
+          Values <- cbind(as.data.frame(rbind(Values)), i, MT, j)
 
           out <- rbind(out, Values)
         }
-      }
+    }
+  }
+
 
   else{
 
     for(i in var){
+      for(j in m){
 
             o <- d[[i]]
-            p <- eval(parse(text = paste0(PF, "(", MT, "(", i , "~", m, ",", deparse(substitute(d)), ")", ")")))
+            p <- eval(parse(text = paste0(PF, "(", MT, "(", i , "~", j, ",", deparse(substitute(d)), ")", ")")))
 
             data <- data.frame(o, p)
             data$res = data$o - data$p
@@ -145,12 +151,13 @@ RMSEloop <- function(d, var, MT, m, PF, s) {
               stop(sQuote(s), " not implemented")
             }
 
-
-            Values <- cbind(as.data.frame(rbind(Values)), i, j, j1, k)
+            Values <- cbind(as.data.frame(rbind(Values)), i, MT, j, PF)
 
             out <- rbind(out, Values)
           }
-        }
+    }
+  }
+
 
   colnames(out) <- if(missing(PF) | PF == FALSE){
     c("N", "Observed Mean", "Predicted Mean", "RMSE", "RMSE, % mean",
