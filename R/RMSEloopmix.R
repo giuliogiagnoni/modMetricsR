@@ -5,7 +5,7 @@
 #' @param MO  is a data frame where:
 #' the first column define the model type, such as "lm" or "lmer"
 #' the second column define the model as "x + y", or "x + y + (1|random)", or "x + y, family = Gamma". Varibales have to be present in the dataset d.
-#' @param PF if TRUE use the prediction fucntion from the data frame, otherwise it uses "predict".
+#' @param PF if TRUE use the prediction function from the data frame (3rd column of MO object), otherwise it uses "predict".
 #' @param s significant digits
 #'  empty:  return all values.
 #'  number 1 to 6: will return the desired significant digits.
