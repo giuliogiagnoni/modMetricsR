@@ -12,7 +12,7 @@ Maintainer: The package maintainer <yourself@somewhere.net>
 Description: Evaluate models for multiple varibale, multiple models and model type and prediction functions.
 License: MIT license
 Depends:
-    epiR,
+    epiR
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
