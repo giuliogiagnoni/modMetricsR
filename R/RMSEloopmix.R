@@ -13,9 +13,6 @@
 #' @return a data frame with different parameters to evaluate the model
 #'
 #' @export
-
-##  library(epiR)
-
 RMSEloopmix <- function(d, var, MO, PF  = TRUE, s) {
 
   out <- NULL

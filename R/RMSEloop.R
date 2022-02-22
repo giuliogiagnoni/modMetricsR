@@ -1,8 +1,16 @@
+#library("devtools")
+#library(roxygen2)
+#library(epiR)
+
+### UPDATE AND INSTALL
+# devtools::document("C:/Users/AU589897/Documents/Rpackages/modRMSE")
+# devtools::install("C:/Users/AU589897/Documents/Rpackages/modRMSE")
+
 #' RMSEloop
 #'
 #' @param d a data frame.
 #' @param var a vector of varibales in the data set.
-#' @param MR a model type, such as "lm" or "lmer".
+#' @param MT a model type, such as "lm" or "lmer".
 #' @param m a model such as "x + y", or "x + y + (1|random)", or "x + y, family = Gamma". Varibales have to be present in the dataset d.
 #' @param PF function for calculate the prediction of the model such as "predict.glm", if empty it will use "predict".
 #' @param s significant digits
@@ -12,13 +20,7 @@
 #' @return a data frame with different parameters to evaluate the model
 #'
 #' @export
-
-
-# devtools::document("C:/Users/AU589897/Documents/Rpackages/modRMSE")
-# devtools::install("C:/Users/AU589897/Documents/Rpackages/modRMSE")
-
-
-RMSEloop <- function(d, var, MT, m, PF = TRUE, s) {
+RMSEloop <- function(d, var, MT, m, PF, s) {
 
   out <- NULL
 

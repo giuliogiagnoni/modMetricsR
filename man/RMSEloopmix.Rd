@@ -15,7 +15,7 @@ RMSEloopmix(d, var, MO, PF = TRUE, s)
 the first column define the model type, such as "lm" or "lmer"
 the second column define the model as "x + y", or "x + y + (1|random)", or "x + y, family = Gamma". Varibales have to be present in the dataset d.}
 
-\item{PF}{if TRUE use the prediction fucntion from the data frame, otherwise it uses "predict".}
+\item{PF}{if TRUE use the prediction function from the data frame (3rd column of MO object), otherwise it uses "predict".}
 
 \item{s}{significant digits
 empty:  return all values.
