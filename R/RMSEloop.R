@@ -20,7 +20,7 @@
 #' @return a data frame with different parameters to evaluate the model
 #'
 #' @export
-RMSEloop <- function(d, var, MT, m, PF, s) {
+RMSEloop <- function(d, var, MT, m, PF = TRUE, s) {
 
   out <- NULL
 
