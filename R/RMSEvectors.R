@@ -11,9 +11,6 @@
 #' @export
 RMSEvectors <- function(o, p, s) {
 
-          o <- d[[i]]
-          p <- predict(eval(parse(text = paste0(MT, "(", i , "~", j, ",", deparse(substitute(d)), ")"))))
-
           data <- data.frame(o, p)
           data$res = data$o - data$p
           data <- subset(data, is.na(data$res)==FALSE)
