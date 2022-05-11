@@ -64,15 +64,13 @@ RMSEvectors <- function(o, p, s) {
             stop(sQuote(s), " not implemented")
           }
 
-          Values <- cbind(as.data.frame(rbind(Values)), i, MT, j)
+          output <- data.frame(par = c("N", "Observed Mean", "Predicted Mean", "RMSE", "RMSE, % mean",
+                                       "Mean Bias, % MSE", "Slope Bias, % MSE", "Dispersion, % MSE",
+                                       "Mean Bias", "Slope Bias", "Dispersion Bias", "P-Mean Bias",
+                                       "P-Slope Bias", "RSR", "CCC", "MAE", "MAE, % mean"),
+                               value = Values)
 
-          colnames(Values) <- c("N", "Observed Mean", "Predicted Mean", "RMSE", "RMSE, % mean",
-                                "Mean Bias, % MSE", "Slope Bias, % MSE", "Dispersion, % MSE",
-                                "Mean Bias", "Slope Bias", "Dispersion Bias", "P-Mean Bias",
-                                "P-Slope Bias", "RSR", "CCC", "MAE", "MAE, % mean")
-
-          return(Values)
-
+          return(output)
 }
 
 
