@@ -6,5 +6,6 @@ The main function is from https://animalnutrition.org/software and https://githu
 To install run: devtools::install_github("giuliogiagnoni/modRMSE")
 
 It includes the functions:
+- RMSEvectors
 - RMSEloop
 - RMSEloopmix
