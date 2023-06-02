@@ -10,7 +10,7 @@ $$ MSE = \frac{\sum_{n=1}{n}(Y_i-\mathbf{Y_i})^2 }{n} $$
 
 Root Mean Square Error
 
-$$ \sqrt{MSE} $$
+$$ RMSE = \sqrt{MSE} $$
 
 Mean Absolute Error (Chai and Draxler, 2014)
 
