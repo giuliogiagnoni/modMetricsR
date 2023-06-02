@@ -9,3 +9,8 @@ It includes the functions:
 - RMSEvectors
 - RMSEloop
 - RMSEloopmix
+
+Where:
+- RMSEvectors returns model evaluation for 2 vectors.
+- RMSEloop returns model evaluation for a serie of specified model, all belonging to the same model type. 
+- RMSEloopmix returns model evaluation for a serie of specified model, that can belong to different model type. 
