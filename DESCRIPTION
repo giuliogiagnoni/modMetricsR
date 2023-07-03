@@ -11,7 +11,7 @@ Description: Evaluate models for with a simple line of code and loop through mul
 License: MIT license
 Depends:
  epiR
- ggpot2
+ ggplot2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
