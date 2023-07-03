@@ -1,4 +1,4 @@
-#' RMSEloopmix
+#' opmetricsloopmix
 #'
 #' @param d a data frame.
 #' @param var a vector of varibales in the data set.
@@ -13,7 +13,7 @@
 #' @return a data frame with different parameters to evaluate the model
 #'
 #' @export
-RMSEloopmix <- function(d, var, MO, PF  = TRUE, s) {
+opmetricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
 
   out <- NULL
 
