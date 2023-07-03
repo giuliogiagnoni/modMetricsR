@@ -1,0 +1,12 @@
+---
+title: "modMetricsR vignette"
+author: "Giulio Giagnoni"
+date: "2023-07-03"
+output: rmarkdown::html_vignette:
+  toc: TRUE
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Your Vignette Title}
+  %\VignetteEncoding{UTF-8}
+bibliography: modMetricsbib.bib
+---
