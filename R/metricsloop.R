@@ -6,7 +6,7 @@
 # devtools::document("C:/Users/AU589897/Documents/Rpackages/modRMSE")
 # devtools::install("C:/Users/AU589897/Documents/Rpackages/modRMSE")
 
-#' RMSEloop
+#' metricsloop
 #'
 #' @param d a data frame.
 #' @param var a vector of varibales in the data set.
@@ -20,7 +20,7 @@
 #' @return a data frame with different parameters to evaluate the model
 #'
 #' @export
-RMSEloop <- function(d, var, MT, m, PF, s) {
+metricsloop <- function(d, var, MT, m, PF, s) {
 
   out <- NULL
 
@@ -74,8 +74,7 @@ RMSEloop <- function(d, var, MT, m, PF, s) {
             Values
           }
           else if (s == 'std1'){
-            ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.001, "<0.001",
-                                                                     ifelse(Values < 0.01 & Values >= 0.001, "<0.01", as.character(Values))))
+             ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.01 & Values >= 0.001,  round(Values, digits = 3), ifelse(Values < 0.001, "<0.001", as.character(Values))))
           }
           else if (s >= 1 & s <= 6){
             formatC(Values, digits=s, format = "fg", flag = "#")
@@ -143,8 +142,7 @@ RMSEloop <- function(d, var, MT, m, PF, s) {
               Values
             }
             else if (s == 'std1'){
-              ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.001, "<0.001",
-                                                                       ifelse(Values < 0.01 & Values >= 0.001, "<0.01", as.character(Values))))
+               ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.01 & Values >= 0.001,  round(Values, digits = 3), ifelse(Values < 0.001, "<0.001", as.character(Values))))
             }
             else if (s >= 1 & s <= 6){
               formatC(Values, digits=s, format = "fg", flag = "#")
