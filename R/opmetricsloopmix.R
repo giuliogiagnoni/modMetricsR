@@ -1,4 +1,4 @@
-#' opmetricsloopmix
+#' metricsloopmix
 #'
 #' @param d a data frame.
 #' @param var a vector of varibales in the data set.
@@ -13,7 +13,7 @@
 #' @return a data frame with different parameters to evaluate the model
 #'
 #' @export
-opmetricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
+metricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
 
   out <- NULL
 
@@ -71,8 +71,7 @@ opmetricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
         Values
       }
       else if (s == 'std1'){
-        ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.001, "<0.001",
-                                                                 ifelse(Values < 0.01 & Values >= 0.001, "<0.01", as.character(Values))))
+         ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.01 & Values >= 0.001,  round(Values, digits = 3), ifelse(Values < 0.001, "<0.001", as.character(Values))))
       }
       else if (s >= 1 & s <= 6){
         formatC(Values, digits=s, format = "fg", flag = "#")
@@ -145,8 +144,7 @@ opmetricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
       Values
     }
     else if (s == 'std1'){
-      ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.001, "<0.001",
-                                                     ifelse(Values < 0.01 & Values >= 0.001, "<0.01", as.character(Values))))
+       ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.01 & Values >= 0.001,  round(Values, digits = 3), ifelse(Values < 0.001, "<0.001", as.character(Values))))
     }
     else if (s >= 1 & s <= 6){
       formatC(Values, digits=s, format = "fg", flag = "#")
