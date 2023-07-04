@@ -3,7 +3,7 @@ Evaluate models with observed and predictions from the model.
 
 The main function is from https://animalnutrition.org/software and https://github.com/National-Animal-Nutrition-Program/Code-Examples/tree/master/Model-Evaluation.
 
-To install run: devtools::install_github("giuliogiagnoni/modRMSE")
+To install run: devtools::install_github("giuliogiagnoni/modMetricsR", force = TRUE, build_vignettes = TRUE)
 
 It includes the functions:
 - opmetrics
