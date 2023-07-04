@@ -1,26 +1,28 @@
 {
-    "id": "DBBACEF0",
+    "id": "57BEAFEF",
     "path": "C:/Users/au589897/OneDrive - Aarhus universitet/Documents/GitHub/modMetricsR/vignettes/my-vignette.Rmd",
-    "project_path": null,
+    "project_path": "vignettes/my-vignette.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "594586992",
     "contents": "",
     "dirty": false,
-    "created": 1688375064359.0,
+    "created": 1688376963477.0,
     "source_on_save": false,
-    "relative_order": 5,
+    "relative_order": 3,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "24,3",
-        "scrollLine": "0"
+        "cursorPosition": "182,0",
+        "scrollLine": "193",
+        "last_setup_crc32": "",
+        "chunk_output_type": "console"
     },
     "folds": "",
-    "lastKnownWriteTime": 1688375165,
+    "lastKnownWriteTime": 1688418523,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1688375165173,
+    "last_content_update": 1688418523799,
     "read_only": false,
     "read_only_alternatives": []
 }

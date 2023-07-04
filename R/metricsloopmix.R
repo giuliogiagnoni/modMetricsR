@@ -5,6 +5,8 @@
 #' @param MO  is a data frame where:
 #' the first column define the model type, such as "lm" or "lmer"
 #' the second column define the model as "x + y", or "x + y + (1|random)", or "x + y, family = Gamma". Varibales have to be present in the dataset d.
+#' the third column define the predict function.
+#' the fourth column define the type of prediction.
 #' @param PF if TRUE use the prediction function from the data frame (3rd column of MO object), otherwise it uses "predict".
 #' @param s significant digits
 #'  empty:  return all values.
@@ -19,14 +21,10 @@ metricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
 
     if(missing(PF) | PF == FALSE){
       for(i in var){
-        for(j in unique(MO[,1])){
-
-         mods <- subset(MO, MO[[1]] == j)
-
-      for(j1 in unique(mods[,2])){
+        for(j in 1:nrow(MO)){
 
       o <- d[[i]]
-      p <- predict(eval(parse(text = paste0(j, "(", i , "~", j1, ",", deparse(substitute(d)), ")"))))
+      p <- predict(eval(parse(text = paste0(MO[j,1], "(", i , "~", MO[j,2], ",", deparse(substitute(d)), ")"))))
 
       data <- data.frame(o, p)
       data$res = data$o - data$p
@@ -80,26 +78,19 @@ metricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
         stop(sQuote(s), " not implemented")
       }
 
-      Values <- cbind(as.data.frame(rbind(Values)), i, j, j1)
+      Values <- cbind(as.data.frame(rbind(Values)), i, MO[j,1], MO[j,2])
 
       out <- rbind(out, Values)
           }
-        }
       }
     }
 
     else{
-
       for(i in var){
-        for(j in unique(MO[,1])){
-
-          mods <- subset(MO, MO[[1]] == j)
-
-          for(j1 in unique(mods[,2])){
-            for(k in  unique(mods[,3])){
+      for(j in 1:nrow(MO)){
 
     o <- d[[i]]
-    p <- eval(parse(text = paste0(k, "(", j, "(", i , "~", j1, ",", deparse(substitute(d)), ")", ")")))
+    p <- eval(parse(text = paste0(MO[j,3], "(", MO[j,1], "(", i, "~", MO[j,2], ",", deparse(substitute(d)), "), type='", MO[j,4],"')")))
 
     data <- data.frame(o, p)
     data$res = data$o - data$p
@@ -131,8 +122,8 @@ metricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
     check <- mean+slope+residual
     rsr <- rm/sd(o, na.rm=TRUE)
     ccc <- epi.ccc(o,p)$rho.c[1]
-    MAE <- mean(abs(res))    # added by Giulio
-    MAEp <- mean(abs(res))/meano*100   # added by Giulio
+    MAE <- mean(abs(res))    # added by GG
+    MAEp <- mean(abs(res))/meano*100   # added by GG
     rmp = rm/meano*100
     mb <- mean(res, na.rm=TRUE)
     sb <- coef(lm(res~p))[2]
@@ -153,13 +144,10 @@ metricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
       stop(sQuote(s), " not implemented")
     }
 
-
-    Values <- cbind(as.data.frame(rbind(Values)), i, j, j1, k)
+    Values <- cbind(as.data.frame(rbind(Values)), i, MO[j,1], MO[j,2], MO[j,3], MO[j,4])
 
     out <- rbind(out, Values)
-            }
-          }
-        }
+      }
       }
     }
 
@@ -173,7 +161,7 @@ metricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
       c("N", "Observed Mean", "Predicted Mean", "RMSE", "RMSE, % mean",
         "Mean Bias, % MSE", "Slope Bias, % MSE", "Dispersion, % MSE",
         "Mean Bias", "Slope Bias", "Dispersion Bias", "P-Mean Bias",
-        "P-Slope Bias", "RSR", "CCC", "MAE", "MAE, % mean", "Var", "ModelType", "Model", "Predict")
+        "P-Slope Bias", "RSR", "CCC", "MAE", "MAE, % mean", "Var", "ModelType", "Model", "Predict", "Type")
     }
 
   return(out)

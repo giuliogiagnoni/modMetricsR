@@ -12,7 +12,7 @@
 #'
 #' @export
 opmetrics <- function(o, p, s, plot = FALSE, residuals = FALSE) {
-  
+
   data <- data.frame(o, p)
   data$res = data$o - data$p
   data <- subset(data, is.na(data$res)==FALSE)
@@ -48,14 +48,14 @@ opmetrics <- function(o, p, s, plot = FALSE, residuals = FALSE) {
   rmp = rm/meano*100
   mb <- mean(res, na.rm=TRUE)
   sb <- coef(lm(res~p))[2]
-  
+
   Values <- c(n, meano, meanp, rm, rmp, mean, slope, residual, mb, sb,
               msre, PMeanBias, PSlope, rsr, ccc[,1], MAE, MAEp)
-  
+
   Values <- if(missing(s)){
     Values
   }
-          
+
   else if (s == 'std1'){
     ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.01 & Values >= 0.001,  round(Values, digits = 3), ifelse(Values < 0.001, "<0.001", as.character(Values))))
   }
@@ -65,18 +65,18 @@ opmetrics <- function(o, p, s, plot = FALSE, residuals = FALSE) {
   else {
     stop(sQuote(s), " not implemented")
   }
-  
+
   output <- data.frame(par = c("N", "Observed Mean", "Predicted Mean", "RMSE", "RMSE, % mean",
                                "Mean Bias, % MSE", "Slope Bias, % MSE", "Dispersion, % MSE",
                                "Mean Bias", "Slope Bias", "Dispersion Bias", "P-Mean Bias",
                                "P-Slope Bias", "RSR", "CCC", "MAE", "MAE, % mean"),
                        value = Values)
-  
-  plotbase <- ggplot(data, aes(o, p)) + geom_point() 
-  
-  plotres <- ggplot(data, aes(p, res)) + geom_point() 
-  
-  
+
+  plotbase <- ggplot(data, aes(p, o)) + geom_point()
+
+  plotres <- ggplot(data, aes(p, res)) + geom_point()
+
+
   if(plot == FALSE & residuals == FALSE)
   {return(output)}
   else if(plot == TRUE & residuals == FALSE)
