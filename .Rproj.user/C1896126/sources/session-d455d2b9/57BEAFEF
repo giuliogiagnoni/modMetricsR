@@ -3,7 +3,7 @@
     "path": "C:/Users/au589897/OneDrive - Aarhus universitet/Documents/GitHub/modMetricsR/vignettes/my-vignette.Rmd",
     "project_path": "vignettes/my-vignette.Rmd",
     "type": "r_markdown",
-    "hash": "594586992",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1688376963477.0,
@@ -12,8 +12,8 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "51,9",
-        "scrollLine": "0",
+        "cursorPosition": "14,18",
+        "scrollLine": "78",
         "last_setup_crc32": "",
         "chunk_output_type": "console"
     },
