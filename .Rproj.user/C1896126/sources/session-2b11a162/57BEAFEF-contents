@@ -149,31 +149,32 @@ flextable(metricsloopmix(d = iris, var = "Petal.Length", MO = modsdata, PF = TRU
 
 ## Metrics included
 
-Following a list of the metrics included.
+Following a list of the metrics included. Where ${Y}_i$ is the observed values, $\hat{Y}_i$ is the predicted values from the model, $n$ is the number of observations, $\mu$ is the average of the observed values, and $\sigma$ is the standard deviation of the observed values.
 
-### Residuals
-
-$$ Residual_i = Observation_i - Prediction_i $$
 
 ### Mean Square Error
-[@bibbyPredictionImprovedEstimation1977a].
+Can be used as such, or to calculate the proportion of the decompose error [@bibbyPredictionImprovedEstimation1977a].
 
 $$ MSE = \frac{\sum_{i=1}^{n}(Y_i-\hat{Y}_i)^2 }{n} $$
 
-### Root Mean Square Error (RMSE)
-As absolute value and as porportion of the mean observed values.
 
-$$ RMSE = \sqrt{MSE} $$
+### Root Mean Square Error (RMSE)
+As absolute value and as proportion of the mean observed values. Main indicator of goodness of a model [@bibbyPredictionImprovedEstimation1977a].
+
+$$ RMSE = \sqrt{MSE} \text{ or } \sqrt{MSE}/\mu$$
+
 ### Mean Absolute Error (MAE)
-(Chai and Draxler, 2014) 
+
+Simular to the RMSE but with a lower weight of the residuals further from the zero [@chaiRootMeanSquare2014]. As for the RMSE it can be divided by $\mu$ to have the MAE as a proportion of the mean observed values. 
 
 $$ MAE = \frac{\sum_{i=1}^n|Y_i-{\hat{Y}_i}|}{n} $$
+
 ### Mean Bias 
 Expressed as percentage of MSE.
 
 $$ MB = \biggr[  \frac{\sum_{i=1}^{n}(Y_i-\hat{Y}_i)}{n} \biggr]^2 $$
 
-### Random bias (DB) 
+### Random Bias (DB) 
 Expressed as percentage of MSE. 
 
 From the regression:
@@ -183,21 +184,25 @@ $$ Y_i - \hat{Y}_i = \hat{Y}_i + \epsilon_i $$
 
 $$ DB = \frac{\sum_{i=1}^{n}\epsilon_i^2 }{n} $$
 
-### Slope bias 
+### Slope Bias (SB)
 Expressed as percentage of MSE.
 
 $$ SP = MSE - MB - DB $$
 
+### RMSE-observations standard deviation ratio (RSR)
+Calcualted as presented in @d.n.moriasiModelEvaluationGuidelines2007.
+
+$$ RSR = RMSE/\sigma $$
+### Concordance Correlation Coefficient (CCC)
+
+Calculated according to @linConcordanceCorrelationCoefficient1989 using the R package @stevensonEpiRToolsAnalysis2023.
 
 
+# Fomulas not included but to consider  {.hidden .unlisted}
 
-
-# References
-
-
-
-# Fomulas not included but to consider
+## Alternative mean bias formulation
 
 $$ MB =  \biggr[ \frac{\sum_{i=1}^{n}Y_i}{n}-\frac{\sum_{i=1}^{n}\hat{Y}_i)}{n}  \biggr] ^2 $$
 
+# References
 
