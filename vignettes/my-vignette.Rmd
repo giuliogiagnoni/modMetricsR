@@ -170,7 +170,7 @@ Simular to the RMSE but with a lower weight of the residuals further from the ze
 $$ MAE = \frac{\sum_{i=1}^n|Y_i-{\hat{Y}_i}|}{n} $$
 
 ### Mean Bias {-}
-Expressed as percentage of MSE.
+Expressed as percentage of MSE, and calculated as squared bias.
 
 $$ MB = \biggr[  \frac{\sum_{i=1}^{n}(Y_i-\hat{Y}_i)}{n} \biggr]^2 $$
 
