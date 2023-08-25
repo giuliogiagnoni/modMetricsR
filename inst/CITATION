@@ -4,6 +4,6 @@ bibentry(
   title    = "modMetricsR: Model evaluation parameters",
   author   = "Giulio Giagnoni",
   year     = "2023",
-  url      = "www.github.com/giuliogiagnoni/modMetricsR"
+  url      = "www.github.com/giuliogiagnoni/modMetricsR",
   type     = {R package. Version 0.0.0.9000}
 )
