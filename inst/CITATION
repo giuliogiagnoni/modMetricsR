@@ -1,13 +1,9 @@
 bibentry(
+  key = "giagnonimodmetricsr",
   bibtype  = "software",
   title    = "modMetricsR: Model evaluation parameters",
   author   = "Giulio Giagnoni",
-  journal  = ,
   year     = "2023",
   version  = "0.0.0.9000",
-  volume   = ,
-  number   = ,
-  pages    = ,
-  doi      = ,
   url      = "www.github.com/giuliogiagnoni/modMetricsR"
 )
