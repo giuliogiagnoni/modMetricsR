@@ -1,9 +1,9 @@
 bibentry(
   key = "giagnonimodmetricsr",
-  bibtype  = "software",
+  bibtype  = "Manual",
   title    = "modMetricsR: Model evaluation parameters",
   author   = "Giulio Giagnoni",
   year     = "2023",
-  version  = "0.0.0.9000",
   url      = "www.github.com/giuliogiagnoni/modMetricsR"
+  type     = {R package. Version 0.0.0.9000}
 )
