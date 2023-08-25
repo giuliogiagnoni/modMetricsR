@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Giulio Giagnoni" />
+
+<meta name="date" content="2023-08-25" />
+
+<title>modMetricsR</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<style type="text/css">.tabwid {
+font-size: initial;
+padding-bottom: 1em;
+}
+.tabwid table{
+border-spacing:0px !important;
+border-collapse:collapse;
+line-height:1;
+margin-left:auto;
+margin-right:auto;
+border-width: 0;
+border-color: transparent;
+caption-side: top;
+}
+.tabwid-caption-bottom table{
+caption-side: bottom;
+}
+.tabwid_left table{
+margin-left:0;
+}
+.tabwid_right table{
+margin-right:0;
+}
+.tabwid td, .tabwid th {
+padding: 0;
+}
+.tabwid a {
+text-decoration: none;
+}
+.tabwid thead {
+background-color: transparent;
+}
+.tabwid tfoot {
+background-color: transparent;
+}
+.tabwid table tr {
+background-color: transparent;
+}
+.katex-display {
+margin: 0 0 !important;
+}
+</style>
+<script>document.addEventListener("DOMContentLoaded", function(event) {
+  var els = document.querySelectorAll(".tabwid");
+  var tabwid_link = document.querySelector('link[href*="tabwid.css"]')
+  if (tabwid_link === null) {
+    const tabwid_styles = document.evaluate("//style[contains(., 'tabwid')]", document, null, XPathResult.ANY_TYPE, null );
+    tabwid_link = tabwid_styles.iterateNext();
+  }
+
+  Array.prototype.forEach.call(els, function(template) {
+      const dest = document.createElement("div");
+      template.parentNode.insertBefore(dest, template.nextSibling)
+      dest.setAttribute("class", "flextable-shadow-host");
+      const fantome = dest.attachShadow({mode: 'open'});
+      fantome.appendChild(template);
+      if (tabwid_link !== null) {
+        fantome.appendChild(tabwid_link.cloneNode(true));
+      }
+  });
+});
+
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">modMetricsR</h1>
+<h4 class="author">Giulio Giagnoni</h4>
+<h4 class="date">2023-08-25</h4>
+
+
+
+<div id="before-starting" class="section level1">
+<h1>Before starting</h1>
+<p>Packages required and number notation.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(modMetricsR)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(epiR)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(ggplot2) </span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(flextable)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>) <span class="co"># normal notation for numbers</span></span></code></pre></div>
+</div>
+<div id="package-overview" class="section level1">
+<h1>Package overview</h1>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<p>Here examples of use for the functions included.</p>
+<div id="opmetrics" class="section level3">
+<h3>opmetrics</h3>
+<p>With <code>opmetrics</code>, which stands for
+“observed-predicted-metrics”, this function can be run just by providing
+observed and predicted value from the model, as:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Sepal.Length , iris)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">opmetrics</span>(iris<span class="sc">$</span>Petal.Length, <span class="fu">predict</span>(m))</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;                  par                                  value</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; 1                  N 150.0000000000000000000000000000000000</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; 2      Observed Mean   3.7580000000000000071054273576010019</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 3     Predicted Mean   3.7579999999999977866593781072879210</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 4               RMSE   0.8620098805304519107295391222578473</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 5       RMSE, % mean  22.9379957565314498424413613975048065</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 6   Mean Bias, % MSE   0.0000000000000000000000000005912892</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; 7  Slope Bias, % MSE  -0.0000000000000000000000000005912892</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; 8  Dispersion, % MSE 100.0000000000000000000000000000000000</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; 9          Mean Bias   0.0000000000000020963844086600384531</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; 10        Slope Bias  -0.0000000000000000118204814984194773</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; 11   Dispersion Bias   0.7430610341321239875611581737757660</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; 12       P-Mean Bias   0.9999999999999763522495754841656890</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; 13      P-Slope Bias   0.9999999999999997779553950749686919</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; 14               RSR   0.4883083573583072434232121850072872</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; 15               CCC   0.8636070794187317156698213693744037</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; 16               MAE   0.7067088106229915123179807778797112</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; 17       MAE, % mean  18.8054499899678440044681337894871831</span></span></code></pre></div>
+<p>Great right? But too many digits, we can just add an argument to
+<code>s =</code>, either a number or a standardize format (like
+<code>s = &quot;std1&quot;</code>)</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">opmetrics</span>(iris<span class="sc">$</span>Petal.Length, <span class="fu">predict</span>(m), <span class="at">s =</span> <span class="st">&quot;std1&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;                  par  value</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; 1                  N    150</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; 2      Observed Mean   3.76</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; 3     Predicted Mean   3.76</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; 4               RMSE   0.86</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; 5       RMSE, % mean  22.94</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 6   Mean Bias, % MSE &lt;0.001</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 7  Slope Bias, % MSE &lt;0.001</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 8  Dispersion, % MSE    100</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 9          Mean Bias &lt;0.001</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 10        Slope Bias &lt;0.001</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 11   Dispersion Bias   0.74</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 12       P-Mean Bias      1</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 13      P-Slope Bias      1</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; 14               RSR   0.49</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 15               CCC   0.86</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; 16               MAE   0.71</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; 17       MAE, % mean  18.81</span></span></code></pre></div>
+<p>If you want observed against prediction just add
+<code>plot = TRUE</code>. Note that this is made with observed against
+predicted, as pointed out from <span class="citation">(Piñeiro et al.
+2008)</span>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">opmetrics</span>(iris<span class="sc">$</span>Petal.Length, <span class="fu">predict</span>(m), <span class="at">plot =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>This object can be used as any ggplot, so adding graphics and
+changing the theme.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">opmetrics</span>(iris<span class="sc">$</span>Petal.Length, <span class="fu">predict</span>(m), <span class="at">plot =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Predicted sepal length, cm&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Observed sepal length, cm&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>If you want to plot the residuals instead just add
+<code>residuals = TRUE</code>. Note residuals are plotted against
+predicting, as it should be <span class="citation">(St-Pierre
+2003)</span>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">opmetrics</span>(iris<span class="sc">$</span>Petal.Length, <span class="fu">predict</span>(m), <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">residuals =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Predicted sepal length, cm&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Residual sepal length, cm&quot;</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Not a great model, maybe by adding species it could look better.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Sepal.Length <span class="sc">+</span> Species, iris)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">opmetrics</span>(iris<span class="sc">$</span>Petal.Length, <span class="fu">predict</span>(m), <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">residuals =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Predicted sepal length, cm&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Residual sepal length, cm&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="metricsloop" class="section level3">
+<h3>metricsloop</h3>
+<p>With <code>metricsloop</code> is possible to compare metrics fom
+different models beloning to the same model class, just by providing the
+models of interest, thanks to the loop built in the function.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>mods <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>          <span class="st">&quot;Sepal.Length+Species&quot;</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>          <span class="st">&quot;Sepal.Length*Species&quot;</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="fu">metricsloop</span>(<span class="at">d =</span> iris, <span class="at">var =</span> <span class="st">&quot;Petal.Length&quot;</span>, <span class="at">MT =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">m =</span> mods, <span class="at">PF =</span> <span class="st">&quot;predict&quot;</span>, <span class="at">s =</span> <span class="st">&quot;std1&quot;</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt;           N Observed Mean Predicted Mean RMSE RMSE, % mean Mean Bias, % MSE</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; Values  150          3.76           3.76 0.86        22.94           &lt;0.001</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; Values1 150          3.76           3.76 0.28         7.42           &lt;0.001</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; Values2 150          3.76           3.76 0.26         6.81           &lt;0.001</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt;         Slope Bias, % MSE Dispersion, % MSE Mean Bias Slope Bias</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt; Values             &lt;0.001               100    &lt;0.001     &lt;0.001</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt; Values1            &lt;0.001               100    &lt;0.001     &lt;0.001</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt; Values2            &lt;0.001               100    &lt;0.001     &lt;0.001</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt;         Dispersion Bias P-Mean Bias P-Slope Bias  RSR  CCC  MAE MAE, % mean</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; Values             0.74           1            1 0.49 0.86 0.71       18.81</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; Values1            0.08           1            1 0.16 0.99 0.21        5.72</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; Values2            0.07           1            1 0.14 0.99  0.2        5.24</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt;                  Var ModelType                Model Predict</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; Values  Petal.Length        lm         Sepal.Length predict</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; Values1 Petal.Length        lm Sepal.Length+Species predict</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; Values2 Petal.Length        lm Sepal.Length*Species predict</span></span></code></pre></div>
+<p>And for better table visualization via flextable, of course is also
+possible to print it as csv/spreadsheet.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">flextable</span>(<span class="fu">metricsloop</span>(<span class="at">d =</span> iris, <span class="at">var =</span> <span class="st">&quot;Petal.Length&quot;</span>, <span class="at">MT =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">m =</span> mods, <span class="at">PF =</span> <span class="st">&quot;predict&quot;</span>, <span class="at">s =</span> <span class="st">&quot;std1&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">autofit</span>()</span></code></pre></div>
+<div class="tabwid"><style>.cl-a32a4754{}.cl-a319c9d8{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a3209fc4{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a320c594{width:0.54in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c59e{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c59f{width:1.355in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5a8{width:0.727in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5a9{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5aa{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5ab{width:1.61in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5b2{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5b3{width:1.007in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5bc{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5bd{width:1.347in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5be{width:1.16in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5c6{width:1.168in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5c7{width:0.608in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5d0{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5d1{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5d2{width:1.262in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5d3{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5da{width:1.041in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5db{width:1.818in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5e4{width:0.761in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5e5{width:0.54in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5e6{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5e7{width:1.355in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5ee{width:0.727in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5ef{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5f0{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5f8{width:1.61in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5f9{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c5fa{width:1.007in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c602{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c603{width:1.347in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c60c{width:1.16in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c60d{width:1.168in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c60e{width:0.608in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c616{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c617{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c618{width:1.262in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c620{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c621{width:1.041in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c622{width:1.818in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c62a{width:0.761in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c62b{width:0.54in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c62c{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c62d{width:1.355in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c634{width:0.727in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c635{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c63e{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c63f{width:1.61in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c640{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c648{width:1.007in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c649{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c64a{width:1.347in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c652{width:1.16in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c653{width:1.168in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c654{width:0.608in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c65c{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c65d{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c65e{width:1.262in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c666{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c667{width:1.041in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c670{width:1.818in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a320c671{width:0.761in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-a32a4754"><thead><tr style="overflow-wrap:break-word;"><th class="cl-a320c594"><p class="cl-a3209fc4"><span class="cl-a319c9d8">N</span></p></th><th class="cl-a320c59e"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Observed Mean</span></p></th><th class="cl-a320c59f"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Predicted Mean</span></p></th><th class="cl-a320c5a8"><p class="cl-a3209fc4"><span class="cl-a319c9d8">RMSE</span></p></th><th class="cl-a320c5a9"><p class="cl-a3209fc4"><span class="cl-a319c9d8">RMSE, % mean</span></p></th><th class="cl-a320c5aa"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Mean Bias, % MSE</span></p></th><th class="cl-a320c5ab"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Slope Bias, % MSE</span></p></th><th class="cl-a320c5b2"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Dispersion, % MSE</span></p></th><th class="cl-a320c5b3"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Mean Bias</span></p></th><th class="cl-a320c5bc"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Slope Bias</span></p></th><th class="cl-a320c5bd"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Dispersion Bias</span></p></th><th class="cl-a320c5be"><p class="cl-a3209fc4"><span class="cl-a319c9d8">P-Mean Bias</span></p></th><th class="cl-a320c5c6"><p class="cl-a3209fc4"><span class="cl-a319c9d8">P-Slope Bias</span></p></th><th class="cl-a320c5c7"><p class="cl-a3209fc4"><span class="cl-a319c9d8">RSR</span></p></th><th class="cl-a320c5d0"><p class="cl-a3209fc4"><span class="cl-a319c9d8">CCC</span></p></th><th class="cl-a320c5d1"><p class="cl-a3209fc4"><span class="cl-a319c9d8">MAE</span></p></th><th class="cl-a320c5d2"><p class="cl-a3209fc4"><span class="cl-a319c9d8">MAE, % mean</span></p></th><th class="cl-a320c5d3"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Var</span></p></th><th class="cl-a320c5da"><p class="cl-a3209fc4"><span class="cl-a319c9d8">ModelType</span></p></th><th class="cl-a320c5db"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Model</span></p></th><th class="cl-a320c5e4"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Predict</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-a320c5e5"><p class="cl-a3209fc4"><span class="cl-a319c9d8">150</span></p></td><td class="cl-a320c5e6"><p class="cl-a3209fc4"><span class="cl-a319c9d8">3.76</span></p></td><td class="cl-a320c5e7"><p class="cl-a3209fc4"><span class="cl-a319c9d8">3.76</span></p></td><td class="cl-a320c5ee"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.86</span></p></td><td class="cl-a320c5ef"><p class="cl-a3209fc4"><span class="cl-a319c9d8">22.94</span></p></td><td class="cl-a320c5f0"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c5f8"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c5f9"><p class="cl-a3209fc4"><span class="cl-a319c9d8">100</span></p></td><td class="cl-a320c5fa"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c602"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c603"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.74</span></p></td><td class="cl-a320c60c"><p class="cl-a3209fc4"><span class="cl-a319c9d8">1</span></p></td><td class="cl-a320c60d"><p class="cl-a3209fc4"><span class="cl-a319c9d8">1</span></p></td><td class="cl-a320c60e"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.49</span></p></td><td class="cl-a320c616"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.86</span></p></td><td class="cl-a320c617"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.71</span></p></td><td class="cl-a320c618"><p class="cl-a3209fc4"><span class="cl-a319c9d8">18.81</span></p></td><td class="cl-a320c620"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Petal.Length</span></p></td><td class="cl-a320c621"><p class="cl-a3209fc4"><span class="cl-a319c9d8">lm</span></p></td><td class="cl-a320c622"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Sepal.Length</span></p></td><td class="cl-a320c62a"><p class="cl-a3209fc4"><span class="cl-a319c9d8">predict</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a320c5e5"><p class="cl-a3209fc4"><span class="cl-a319c9d8">150</span></p></td><td class="cl-a320c5e6"><p class="cl-a3209fc4"><span class="cl-a319c9d8">3.76</span></p></td><td class="cl-a320c5e7"><p class="cl-a3209fc4"><span class="cl-a319c9d8">3.76</span></p></td><td class="cl-a320c5ee"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.28</span></p></td><td class="cl-a320c5ef"><p class="cl-a3209fc4"><span class="cl-a319c9d8">7.42</span></p></td><td class="cl-a320c5f0"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c5f8"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c5f9"><p class="cl-a3209fc4"><span class="cl-a319c9d8">100</span></p></td><td class="cl-a320c5fa"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c602"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c603"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.08</span></p></td><td class="cl-a320c60c"><p class="cl-a3209fc4"><span class="cl-a319c9d8">1</span></p></td><td class="cl-a320c60d"><p class="cl-a3209fc4"><span class="cl-a319c9d8">1</span></p></td><td class="cl-a320c60e"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.16</span></p></td><td class="cl-a320c616"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.99</span></p></td><td class="cl-a320c617"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.21</span></p></td><td class="cl-a320c618"><p class="cl-a3209fc4"><span class="cl-a319c9d8">5.72</span></p></td><td class="cl-a320c620"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Petal.Length</span></p></td><td class="cl-a320c621"><p class="cl-a3209fc4"><span class="cl-a319c9d8">lm</span></p></td><td class="cl-a320c622"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Sepal.Length+Species</span></p></td><td class="cl-a320c62a"><p class="cl-a3209fc4"><span class="cl-a319c9d8">predict</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a320c62b"><p class="cl-a3209fc4"><span class="cl-a319c9d8">150</span></p></td><td class="cl-a320c62c"><p class="cl-a3209fc4"><span class="cl-a319c9d8">3.76</span></p></td><td class="cl-a320c62d"><p class="cl-a3209fc4"><span class="cl-a319c9d8">3.76</span></p></td><td class="cl-a320c634"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.26</span></p></td><td class="cl-a320c635"><p class="cl-a3209fc4"><span class="cl-a319c9d8">6.81</span></p></td><td class="cl-a320c63e"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c63f"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c640"><p class="cl-a3209fc4"><span class="cl-a319c9d8">100</span></p></td><td class="cl-a320c648"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c649"><p class="cl-a3209fc4"><span class="cl-a319c9d8">&lt;0.001</span></p></td><td class="cl-a320c64a"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.07</span></p></td><td class="cl-a320c652"><p class="cl-a3209fc4"><span class="cl-a319c9d8">1</span></p></td><td class="cl-a320c653"><p class="cl-a3209fc4"><span class="cl-a319c9d8">1</span></p></td><td class="cl-a320c654"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.14</span></p></td><td class="cl-a320c65c"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.99</span></p></td><td class="cl-a320c65d"><p class="cl-a3209fc4"><span class="cl-a319c9d8">0.2</span></p></td><td class="cl-a320c65e"><p class="cl-a3209fc4"><span class="cl-a319c9d8">5.24</span></p></td><td class="cl-a320c666"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Petal.Length</span></p></td><td class="cl-a320c667"><p class="cl-a3209fc4"><span class="cl-a319c9d8">lm</span></p></td><td class="cl-a320c670"><p class="cl-a3209fc4"><span class="cl-a319c9d8">Sepal.Length*Species</span></p></td><td class="cl-a320c671"><p class="cl-a3209fc4"><span class="cl-a319c9d8">predict</span></p></td></tr></tbody></table></div>
+</div>
+<div id="metricsloopmix" class="section level3">
+<h3>metricsloopmix</h3>
+<p>With <code>metricsloopmix</code> is possible to compare metrics fom
+different models beloning to the different model classes, just by
+providing the models of interest, thanks to the loop built in the
+function.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>modclass <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;lm&quot;</span>, <span class="st">&quot;glm&quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>modsid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Length, family = Gamma&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>modsdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(modclass, modsid)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="fu">metricsloopmix</span>(<span class="at">d =</span> iris, <span class="at">var =</span> <span class="st">&quot;Petal.Length&quot;</span>, <span class="at">MO =</span> modsdata, <span class="at">s =</span> <span class="st">&quot;std1&quot;</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt;           N Observed Mean Predicted Mean RMSE RMSE, % mean Mean Bias, % MSE</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; Values  150          3.76           3.76 0.86        22.94           &lt;0.001</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; Values1 150          3.76            0.3 3.91       104.15            77.92</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt;         Slope Bias, % MSE Dispersion, % MSE Mean Bias Slope Bias</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; Values             &lt;0.001               100    &lt;0.001     &lt;0.001</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; Values1             17.23              4.85      3.45     &lt;0.001</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt;         Dispersion Bias P-Mean Bias P-Slope Bias  RSR    CCC  MAE MAE, % mean</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; Values             0.74           1            1 0.49   0.86 0.71       18.81</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; Values1            0.74      &lt;0.001       &lt;0.001 2.22 &lt;0.001 3.45       91.93</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt;                  Var ModelType                        Model</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; Values  Petal.Length        lm                 Sepal.Length</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; Values1 Petal.Length       glm Sepal.Length, family = Gamma</span></span></code></pre></div>
+<p>Is also possible to use different <code>predict functinos</code> by
+setting <code>PF = TRUE</code>, and additing a third column the the
+<code>MO</code> data with the prediction function intended for each
+model.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>modclass <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;lm&quot;</span>, <span class="st">&quot;glm&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>modsid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Length, family = Gamma&quot;</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>modpredict <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;predict.lm&quot;</span>, <span class="st">&quot;predict.glm&quot;</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>predictype <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;response&quot;</span>, <span class="st">&quot;response&quot;</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>modsdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(modclass, modsid, modpredict,predictype)</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="fu">metricsloopmix</span>(<span class="at">d =</span> iris, <span class="at">var =</span> <span class="st">&quot;Petal.Length&quot;</span>, <span class="at">MO =</span> modsdata, <span class="at">PF =</span> <span class="cn">TRUE</span>, <span class="at">s =</span> <span class="st">&quot;std1&quot;</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt;           N Observed Mean Predicted Mean RMSE RMSE, % mean Mean Bias, % MSE</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt; Values  150          3.76           3.76 0.86        22.94           &lt;0.001</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt; Values1 150          3.76           3.76 1.36        36.15           &lt;0.001</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt;         Slope Bias, % MSE Dispersion, % MSE Mean Bias Slope Bias</span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt; Values             &lt;0.001               100    &lt;0.001     &lt;0.001</span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; Values1             14.57             85.43    &lt;0.001     &lt;0.001</span></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt;         Dispersion Bias P-Mean Bias P-Slope Bias  RSR  CCC  MAE MAE, % mean</span></span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt; Values             0.74           1            1 0.49 0.86 0.71       18.81</span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#&gt; Values1            1.58           1       &lt;0.001 0.77  0.7 1.13       29.96</span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#&gt;                  Var ModelType                        Model     Predict</span></span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="co">#&gt; Values  Petal.Length        lm                 Sepal.Length  predict.lm</span></span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co">#&gt; Values1 Petal.Length       glm Sepal.Length, family = Gamma predict.glm</span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt;             Type</span></span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="co">#&gt; Values  response</span></span>
+<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#&gt; Values1 response</span></span></code></pre></div>
+<p>And for better table visualization via flextable.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">flextable</span>(<span class="fu">metricsloopmix</span>(<span class="at">d =</span> iris, <span class="at">var =</span> <span class="st">&quot;Petal.Length&quot;</span>, <span class="at">MO =</span> modsdata, <span class="at">PF =</span> <span class="cn">TRUE</span>, <span class="at">s =</span> <span class="st">&quot;std1&quot;</span>)) <span class="sc">%&gt;%</span> <span class="fu">autofit</span>()</span></code></pre></div>
+<div class="tabwid"><style>.cl-a39c33dc{}.cl-a38d38a0{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a393d0c0{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a39410c6{width:0.54in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39410da{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39410e4{width:1.355in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39410e5{width:0.727in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39410ee{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39410f8{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39410f9{width:1.61in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39410fa{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941102{width:1.007in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394110c{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394110d{width:1.347in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394110e{width:1.16in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941116{width:1.168in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941117{width:0.608in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941118{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941119{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941120{width:1.262in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941121{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394112a{width:1.041in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394112b{width:2.387in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394112c{width:1.032in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941134{width:0.914in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941135{width:0.54in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941136{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394113e{width:1.355in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394113f{width:0.727in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941140{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941141{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941148{width:1.61in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941152{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941153{width:1.007in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394115c{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394115d{width:1.347in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941166{width:1.16in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941167{width:1.168in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941170{width:0.608in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941171{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941172{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941173{width:1.262in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941174{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394117a{width:1.041in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394117b{width:2.387in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941184{width:1.032in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941185{width:0.914in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941186{width:0.54in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394118e{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a394118f{width:1.355in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941190{width:0.727in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941198{width:1.372in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a3941199{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411a2{width:1.61in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411a3{width:1.601in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411a4{width:1.007in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411ac{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411ad{width:1.347in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411ae{width:1.16in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411b6{width:1.168in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411b7{width:0.608in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411b8{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411b9{width:0.616in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411c0{width:1.262in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411c1{width:1.143in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411c2{width:1.041in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411ca{width:2.387in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411cb{width:1.032in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a39411cc{width:0.914in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-a39c33dc"><thead><tr style="overflow-wrap:break-word;"><th class="cl-a39410c6"><p class="cl-a393d0c0"><span class="cl-a38d38a0">N</span></p></th><th class="cl-a39410da"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Observed Mean</span></p></th><th class="cl-a39410e4"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Predicted Mean</span></p></th><th class="cl-a39410e5"><p class="cl-a393d0c0"><span class="cl-a38d38a0">RMSE</span></p></th><th class="cl-a39410ee"><p class="cl-a393d0c0"><span class="cl-a38d38a0">RMSE, % mean</span></p></th><th class="cl-a39410f8"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Mean Bias, % MSE</span></p></th><th class="cl-a39410f9"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Slope Bias, % MSE</span></p></th><th class="cl-a39410fa"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Dispersion, % MSE</span></p></th><th class="cl-a3941102"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Mean Bias</span></p></th><th class="cl-a394110c"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Slope Bias</span></p></th><th class="cl-a394110d"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Dispersion Bias</span></p></th><th class="cl-a394110e"><p class="cl-a393d0c0"><span class="cl-a38d38a0">P-Mean Bias</span></p></th><th class="cl-a3941116"><p class="cl-a393d0c0"><span class="cl-a38d38a0">P-Slope Bias</span></p></th><th class="cl-a3941117"><p class="cl-a393d0c0"><span class="cl-a38d38a0">RSR</span></p></th><th class="cl-a3941118"><p class="cl-a393d0c0"><span class="cl-a38d38a0">CCC</span></p></th><th class="cl-a3941119"><p class="cl-a393d0c0"><span class="cl-a38d38a0">MAE</span></p></th><th class="cl-a3941120"><p class="cl-a393d0c0"><span class="cl-a38d38a0">MAE, % mean</span></p></th><th class="cl-a3941121"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Var</span></p></th><th class="cl-a394112a"><p class="cl-a393d0c0"><span class="cl-a38d38a0">ModelType</span></p></th><th class="cl-a394112b"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Model</span></p></th><th class="cl-a394112c"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Predict</span></p></th><th class="cl-a3941134"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Type</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-a3941135"><p class="cl-a393d0c0"><span class="cl-a38d38a0">150</span></p></td><td class="cl-a3941136"><p class="cl-a393d0c0"><span class="cl-a38d38a0">3.76</span></p></td><td class="cl-a394113e"><p class="cl-a393d0c0"><span class="cl-a38d38a0">3.76</span></p></td><td class="cl-a394113f"><p class="cl-a393d0c0"><span class="cl-a38d38a0">0.86</span></p></td><td class="cl-a3941140"><p class="cl-a393d0c0"><span class="cl-a38d38a0">22.94</span></p></td><td class="cl-a3941141"><p class="cl-a393d0c0"><span class="cl-a38d38a0">&lt;0.001</span></p></td><td class="cl-a3941148"><p class="cl-a393d0c0"><span class="cl-a38d38a0">&lt;0.001</span></p></td><td class="cl-a3941152"><p class="cl-a393d0c0"><span class="cl-a38d38a0">100</span></p></td><td class="cl-a3941153"><p class="cl-a393d0c0"><span class="cl-a38d38a0">&lt;0.001</span></p></td><td class="cl-a394115c"><p class="cl-a393d0c0"><span class="cl-a38d38a0">&lt;0.001</span></p></td><td class="cl-a394115d"><p class="cl-a393d0c0"><span class="cl-a38d38a0">0.74</span></p></td><td class="cl-a3941166"><p class="cl-a393d0c0"><span class="cl-a38d38a0">1</span></p></td><td class="cl-a3941167"><p class="cl-a393d0c0"><span class="cl-a38d38a0">1</span></p></td><td class="cl-a3941170"><p class="cl-a393d0c0"><span class="cl-a38d38a0">0.49</span></p></td><td class="cl-a3941171"><p class="cl-a393d0c0"><span class="cl-a38d38a0">0.86</span></p></td><td class="cl-a3941172"><p class="cl-a393d0c0"><span class="cl-a38d38a0">0.71</span></p></td><td class="cl-a3941173"><p class="cl-a393d0c0"><span class="cl-a38d38a0">18.81</span></p></td><td class="cl-a3941174"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Petal.Length</span></p></td><td class="cl-a394117a"><p class="cl-a393d0c0"><span class="cl-a38d38a0">lm</span></p></td><td class="cl-a394117b"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Sepal.Length</span></p></td><td class="cl-a3941184"><p class="cl-a393d0c0"><span class="cl-a38d38a0">predict.lm</span></p></td><td class="cl-a3941185"><p class="cl-a393d0c0"><span class="cl-a38d38a0">response</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a3941186"><p class="cl-a393d0c0"><span class="cl-a38d38a0">150</span></p></td><td class="cl-a394118e"><p class="cl-a393d0c0"><span class="cl-a38d38a0">3.76</span></p></td><td class="cl-a394118f"><p class="cl-a393d0c0"><span class="cl-a38d38a0">3.76</span></p></td><td class="cl-a3941190"><p class="cl-a393d0c0"><span class="cl-a38d38a0">1.36</span></p></td><td class="cl-a3941198"><p class="cl-a393d0c0"><span class="cl-a38d38a0">36.15</span></p></td><td class="cl-a3941199"><p class="cl-a393d0c0"><span class="cl-a38d38a0">&lt;0.001</span></p></td><td class="cl-a39411a2"><p class="cl-a393d0c0"><span class="cl-a38d38a0">14.57</span></p></td><td class="cl-a39411a3"><p class="cl-a393d0c0"><span class="cl-a38d38a0">85.43</span></p></td><td class="cl-a39411a4"><p class="cl-a393d0c0"><span class="cl-a38d38a0">&lt;0.001</span></p></td><td class="cl-a39411ac"><p class="cl-a393d0c0"><span class="cl-a38d38a0">&lt;0.001</span></p></td><td class="cl-a39411ad"><p class="cl-a393d0c0"><span class="cl-a38d38a0">1.58</span></p></td><td class="cl-a39411ae"><p class="cl-a393d0c0"><span class="cl-a38d38a0">1</span></p></td><td class="cl-a39411b6"><p class="cl-a393d0c0"><span class="cl-a38d38a0">&lt;0.001</span></p></td><td class="cl-a39411b7"><p class="cl-a393d0c0"><span class="cl-a38d38a0">0.77</span></p></td><td class="cl-a39411b8"><p class="cl-a393d0c0"><span class="cl-a38d38a0">0.7</span></p></td><td class="cl-a39411b9"><p class="cl-a393d0c0"><span class="cl-a38d38a0">1.13</span></p></td><td class="cl-a39411c0"><p class="cl-a393d0c0"><span class="cl-a38d38a0">29.96</span></p></td><td class="cl-a39411c1"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Petal.Length</span></p></td><td class="cl-a39411c2"><p class="cl-a393d0c0"><span class="cl-a38d38a0">glm</span></p></td><td class="cl-a39411ca"><p class="cl-a393d0c0"><span class="cl-a38d38a0">Sepal.Length, family = Gamma</span></p></td><td class="cl-a39411cb"><p class="cl-a393d0c0"><span class="cl-a38d38a0">predict.glm</span></p></td><td class="cl-a39411cc"><p class="cl-a393d0c0"><span class="cl-a38d38a0">response</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<div id="metrics-included" class="section level2">
+<h2>Metrics included</h2>
+<p>Following a list of the metrics included. Where <span class="math inline">\({Y}_i\)</span> is the observed values, <span class="math inline">\(\hat{Y}_i\)</span> is the predicted values from
+the model, <span class="math inline">\(n\)</span> is the number of
+observations, <span class="math inline">\(\mu\)</span> is the average of
+the observed values, and <span class="math inline">\(\sigma\)</span> is
+the standard deviation of the observed values.</p>
+<div id="mean-square-error" class="section level3 unnumbered">
+<h3 class="unnumbered">Mean Square Error</h3>
+<p>Can be used as such, or to calculate the proportion of the decompose
+error <span class="citation">(Bibby and Toutenburg 1977)</span>.</p>
+<p><span class="math display">\[ MSE =
+\frac{\sum_{i=1}^{n}(Y_i-\hat{Y}_i)^2 }{n} \]</span></p>
+</div>
+<div id="root-mean-square-error-rmse" class="section level3 unnumbered">
+<h3 class="unnumbered">Root Mean Square Error (RMSE)</h3>
+<p>As absolute value and as proportion of the mean observed values. Main
+indicator of goodness of a model <span class="citation">(Bibby and
+Toutenburg 1977)</span>.</p>
+<p><span class="math display">\[ RMSE = \sqrt{MSE} \text{ or }
+\sqrt{MSE}/\mu\]</span></p>
+</div>
+<div id="mean-absolute-error-mae" class="section level3 unnumbered">
+<h3 class="unnumbered">Mean Absolute Error (MAE)</h3>
+<p>Simular to the RMSE but with a lower weight of the residuals further
+from the zero <span class="citation">(Chai and Draxler 2014)</span>. As
+for the RMSE it can be divided by <span class="math inline">\(\mu\)</span> to have the MAE as a proportion of
+the mean observed values.</p>
+<p><span class="math display">\[ MAE =
+\frac{\sum_{i=1}^n|Y_i-{\hat{Y}_i}|}{n} \]</span></p>
+</div>
+<div id="mean-bias" class="section level3 unnumbered">
+<h3 class="unnumbered">Mean Bias</h3>
+<p>Expressed as percentage of MSE, and calculated as squared bias.</p>
+<p><span class="math display">\[ MB =
+\biggr[  \frac{\sum_{i=1}^{n}(Y_i-\hat{Y}_i)}{n} \biggr]^2 \]</span></p>
+</div>
+<div id="random-bias-db" class="section level3 unnumbered">
+<h3 class="unnumbered">Random Bias (DB)</h3>
+<p>Expressed as percentage of MSE.</p>
+<p>From the regression:</p>
+<p><span class="math display">\[ Y_i - \hat{Y}_i = \hat{Y}_i +
+\epsilon_i \]</span></p>
+<p><span class="math display">\[ DB = \frac{\sum_{i=1}^{n}\epsilon_i^2
+}{n} \]</span></p>
+</div>
+<div id="slope-bias-sb" class="section level3 unnumbered">
+<h3 class="unnumbered">Slope Bias (SB)</h3>
+<p>Expressed as percentage of MSE.</p>
+<p><span class="math display">\[ SP = MSE - MB - DB \]</span></p>
+</div>
+<div id="rmse-observations-standard-deviation-ratio-rsr" class="section level3 unnumbered">
+<h3 class="unnumbered">RMSE-observations standard deviation ratio
+(RSR)</h3>
+<p>Calcualted as presented in <span class="citation">Moriasi, D. N. et
+al. (2007)</span>.</p>
+<p><span class="math display">\[ RSR = RMSE/\sigma \]</span></p>
+</div>
+<div id="concordance-correlation-coefficient-ccc" class="section level3 unnumbered">
+<h3 class="unnumbered">Concordance Correlation Coefficient (CCC)</h3>
+<p>Calculated according to <span class="citation">Lin (1989)</span>
+using the R package <span class="citation">Stevenson et al.
+(2023)</span>.</p>
+</div>
+</div>
+</div>
+<div id="fomulas-not-included-but-to-consider" class="section level1 hidden unlisted">
+<h1 class="hidden unlisted">Fomulas not included but to consider</h1>
+<div id="alternative-mean-bias-formulation" class="section level2">
+<h2>Alternative mean bias formulation</h2>
+<p><span class="math display">\[ MB =  \biggr[
+\frac{\sum_{i=1}^{n}Y_i}{n}-\frac{\sum_{i=1}^{n}\hat{Y}_i)}{n}  \biggr]
+^2 \]</span></p>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-bibbyPredictionImprovedEstimation1977a" class="csl-entry">
+Bibby, John, and Helge Toutenburg. 1977. <em>Prediction and
+<span>Improved Estimation</span> in <span>Linear Models</span></em>.
+<span>Wiley</span>.
+</div>
+<div id="ref-chaiRootMeanSquare2014" class="csl-entry">
+Chai, T., and R. R. Draxler. 2014. <span>“Root Mean Square Error
+(<span>RMSE</span>) or Mean Absolute Error (<span>MAE</span>)?
+<span>Arguments</span> Against Avoiding <span>RMSE</span> in the
+Literature.”</span> <em>Geoscientific Model Development</em> 7 (3):
+1247–50. <a href="https://doi.org/10.5194/gmd-7-1247-2014">https://doi.org/10.5194/gmd-7-1247-2014</a>.
+</div>
+<div id="ref-linConcordanceCorrelationCoefficient1989" class="csl-entry">
+Lin, Lawrence I-Kuei. 1989. <span>“A <span>Concordance Correlation
+Coefficient</span> to <span>Evaluate Reproducibility</span>.”</span>
+<em>Biometrics</em> 45 (1): 255–68. <a href="https://doi.org/10.2307/2532051">https://doi.org/10.2307/2532051</a>.
+</div>
+<div id="ref-moriasid.n.ModelEvaluationGuidelines2007" class="csl-entry">
+Moriasi, D. N., Arnold, J. G., Van Liew, M. W., Bingner, R. L., Harmel,
+R. D., and Veith, T. L. 2007. <span>“Model <span>Evaluation
+Guidelines</span> for <span>Systematic Quantification</span> of
+<span>Accuracy</span> in <span>Watershed Simulations</span>.”</span>
+<em>Transactions of the ASABE</em> 50 (3): 885–900. <a href="https://doi.org/10.13031/2013.23153">https://doi.org/10.13031/2013.23153</a>.
+</div>
+<div id="ref-pineiroHowEvaluateModels2008" class="csl-entry">
+Piñeiro, Gervasio, Susana Perelman, Juan P. Guerschman, and José M.
+Paruelo. 2008. <span>“How to Evaluate Models: <span>Observed</span> Vs.
+Predicted or Predicted Vs. Observed?”</span> <em>Ecological
+Modelling</em> 216 (3): 316–22. <a href="https://doi.org/10.1016/j.ecolmodel.2008.05.006">https://doi.org/10.1016/j.ecolmodel.2008.05.006</a>.
+</div>
+<div id="ref-stevensonEpiRToolsAnalysis2023" class="csl-entry">
+Stevenson, Mark, Evan Sergeant, Cord Heuer, Telmo Nunes, Cord Heuer,
+Jonathon Marshall, Javier Sanchez, et al. 2023. <span>“<span class="nocase">epiR</span>: <span>Tools</span> for the
+<span>Analysis</span> of <span>Epidemiological Data</span>.”</span>
+</div>
+<div id="ref-st-pierreReassessmentBiasesPredicted2003" class="csl-entry">
+St-Pierre, N. R. 2003. <span>“Reassessment of <span>Biases</span> in
+<span>Predicted Nitrogen Flows</span> to the <span>Duodenum</span> by
+<span>NRC</span> 2001.”</span> <em>Journal of Dairy Science</em> 86 (1):
+344–50. <a href="https://doi.org/10.3168/jds.S0022-0302(03)73612-1">https://doi.org/10.3168/jds.S0022-0302(03)73612-1</a>.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
