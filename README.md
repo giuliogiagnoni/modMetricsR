@@ -15,6 +15,6 @@ Where:
 - `metricsloop` returns model evaluation for a serie of specified model, all belonging to the same model type. 
 - `metricsloopmix` returns model evaluation for a serie of specified model, that can belong to different model type. 
 
-A package overview is provided in the vignette (modMetricsR/vignette/modMetricsR.html), which can be downloaded and opened with any browser.
+A package overview is provided in the vignette file (vignettes/modMetricsR.html), which can be downloaded and opened with any browser.
 
 To cite the package type `citation("modMetricsR")`
