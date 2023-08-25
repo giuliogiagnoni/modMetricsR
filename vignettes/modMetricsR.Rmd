@@ -1,11 +1,18 @@
 ---
-title: "modMetricsR vignette"
+title: "modMetricsR"
 author: "Giulio Giagnoni"
-date: "2023-07-03"
-output: 
-  html_document:
-  toc: yes
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{modMetricsR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 bibliography: modMetricsR.bib
+---
+
+---
+title: "modMetricsR vignette"
+
 editor_options: 
   chunk_output_type: console
 ---
@@ -170,7 +177,7 @@ Simular to the RMSE but with a lower weight of the residuals further from the ze
 $$ MAE = \frac{\sum_{i=1}^n|Y_i-{\hat{Y}_i}|}{n} $$
 
 ### Mean Bias {-}
-Expressed as percentage of MSE.
+Expressed as percentage of MSE, and calculated as squared bias.
 
 $$ MB = \biggr[  \frac{\sum_{i=1}^{n}(Y_i-\hat{Y}_i)}{n} \biggr]^2 $$
 
@@ -206,4 +213,3 @@ Calculated according to @linConcordanceCorrelationCoefficient1989 using the R pa
 $$ MB =  \biggr[ \frac{\sum_{i=1}^{n}Y_i}{n}-\frac{\sum_{i=1}^{n}\hat{Y}_i)}{n}  \biggr] ^2 $$
 
 # References
-
