@@ -2,19 +2,12 @@
 title: "modMetricsR"
 author: "Giulio Giagnoni"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:  rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{modMetricsR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: modMetricsR.bib
----
-
----
-title: "modMetricsR vignette"
-
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}

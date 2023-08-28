@@ -1,6 +1,6 @@
 {
     "id": "7389AD84",
-    "path": "~/GitHub/modMetricsR/R/opmetrics.R",
+    "path": "C:/Users/au589897/OneDrive - Aarhus universitet/Documents/GitHub/modMetricsR/R/opmetrics.R",
     "project_path": "R/opmetrics.R",
     "type": "r_source",
     "hash": "0",
@@ -8,19 +8,19 @@
     "dirty": false,
     "created": 1689022449111.0,
     "source_on_save": false,
-    "relative_order": 6,
+    "relative_order": 2,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "76,36",
+        "cursorPosition": "13,2",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1688406301,
+    "lastKnownWriteTime": 1693202224,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1688406301,
+    "last_content_update": 1693202224448,
     "read_only": false,
     "read_only_alternatives": []
 }

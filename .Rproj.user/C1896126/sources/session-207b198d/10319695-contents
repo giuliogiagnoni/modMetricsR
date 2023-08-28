@@ -1,5 +1,7 @@
 #' metricsloopmix
 #'
+#' @importFrom epiR epi.ccc
+#'
 #' @param d a data frame.
 #' @param var a vector of varibales in the data set.
 #' @param MO  is a data frame where:

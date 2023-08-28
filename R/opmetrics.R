@@ -1,5 +1,7 @@
 #' opmetrics
 #'
+#' @importFrom epiR epi.ccc
+#'
 #' @param o the vector with the observed values
 #' @param p the vector with the predicted values
 #' @param s significant digits

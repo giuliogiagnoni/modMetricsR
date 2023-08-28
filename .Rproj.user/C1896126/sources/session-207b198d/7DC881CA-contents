@@ -1,12 +1,6 @@
-#library("devtools")
-#library(roxygen2)
-#library(epiR)
-
-### UPDATE AND INSTALL
-# devtools::document("C:/Users/AU589897/Documents/Rpackages/modRMSE")
-# devtools::install("C:/Users/AU589897/Documents/Rpackages/modRMSE")
-
 #' metricsloop
+#'
+#' @importFrom epiR epi.ccc
 #'
 #' @param d a data frame.
 #' @param var a vector of varibales in the data set.
