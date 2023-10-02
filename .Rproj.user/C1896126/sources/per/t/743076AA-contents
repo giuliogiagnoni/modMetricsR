@@ -1,0 +1,21 @@
+Package: modMetricsR
+Title: Model evaluation parameters
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Giulio",
+           family = "Giagnoni",
+           role = c("aut", "cre"),
+           email = "gigi@anivet.au.dk",
+           comment = c(ORCID = "0000-0001-8153-3041"))
+Description: Evaluate models for with a simple line of code and loop through multiple variables and models .
+License: MIT license
+Imports:
+ epiR,
+ ggplot2
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
