@@ -7,11 +7,13 @@ To install run: `devtools::install_github("giuliogiagnoni/modMetricsR", force = 
 
 It includes the functions:
 - `r opmetrics`
+- `r opmetricsgroups`
 - `r metricsloop`
 - `r metricsloopmix`
 
 Where:
 - `opmetrics` returns model evaluation for 2 vectors (observed and predicted), with also possibility of plotting.
+- `opmetricsgroups`same as `opmetrics`, but possible compute evaluation by group.
 - `metricsloop` returns model evaluation for a serie of specified model, all belonging to the same model type. 
 - `metricsloopmix` returns model evaluation for a serie of specified model, that can belong to different model type. 
 
