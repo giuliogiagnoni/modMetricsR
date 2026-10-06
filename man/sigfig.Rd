@@ -2,18 +2,26 @@
 % Please edit documentation in R/sigfig.R
 \name{sigfig}
 \alias{sigfig}
-\title{signfig}
+\title{Format numbers to a number of significant digits}
 \usage{
 sigfig(vec, digits)
 }
 \arguments{
-\item{vec}{a numeric vector}
+\item{vec}{A numeric vector.}
 
-\item{digits}{number of significant digits requested}
+\item{digits}{Number of significant digits (a single positive integer).}
 }
 \value{
-value(s) as character with the selected number of signiciant digits
+A character vector of the same length as \code{vec}. \code{NA} values stay \code{NA}.
 }
 \description{
-signfig
+Rounds numbers to the requested number of significant digits and returns
+them as character, keeping trailing zeros (e.g. \code{1.5} becomes \code{"1.50"} with
+3 digits) and dropping a dangling decimal point (e.g. \code{"100"} rather than
+\code{"100."}).
+}
+\examples{
+sigfig(c(0.012345, 1.5, 100, 123.456), digits = 3)
+sigfig(c(1234.5, NA), digits = 2)
+
 }

@@ -16,7 +16,7 @@ opmetricsgroups(o, p, g, s, plot = FALSE, residuals = FALSE)
 \item{s}{significant digits
 empty:  return all values.
 number 1 to 6: will return the desired significant digits.
-"std1": will return number as character in a predefined format.}
+"std1" or "std2: will return number as character in a predefined format.}
 
 \item{plot}{plot observed against predicted value in ggplot.}
 

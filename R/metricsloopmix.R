@@ -137,10 +137,13 @@ metricsloopmix <- function(d, var, MO, PF  = TRUE, s) {
       Values
     }
     else if (s == 'std1'){
-       ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.01 & Values >= 0.001,  round(Values, digits = 3), ifelse(Values < 0.001, "<0.001", as.character(Values))))
+      pval_std1(Values)
+    }
+    else if (s == 'std2'){
+      pval_std2(Values)
     }
     else if (s >= 1 & s <= 6){
-      formatC(Values, digits=s, format = "fg", flag = "#")
+      sigfig(Values, s)
     }
     else {
       stop(sQuote(s), " not implemented")

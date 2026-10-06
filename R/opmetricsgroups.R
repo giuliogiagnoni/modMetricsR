@@ -9,7 +9,7 @@
 #' @param s significant digits
 #'  empty:  return all values.
 #'  number 1 to 6: will return the desired significant digits.
-#'  "std1": will return number as character in a predefined format.
+#'  "std1" or "std2: will return number as character in a predefined format.
 #' @param plot plot observed against predicted value in ggplot.
 #' @param residuals if TRUE together with plot, it plots the residuals on the y axis against the predicted values in ggplot.
 #' @return a data frame with different parameters to evaluate the predicted
@@ -70,10 +70,13 @@ opmetricsgroups <- function(o, p, g, s, plot = FALSE, residuals = FALSE) {
   }
 
   else if (s == 'std1'){
-    ifelse(Values >= 0.01, round(Values, digits = 2), ifelse(Values < 0.01 & Values >= 0.001,  round(Values, digits = 3), ifelse(Values < 0.001, "<0.001", as.character(Values))))
+    pval_std1(Values)
+  }
+  else if (s == 'std2'){
+    pval_std2(Values)
   }
   else if (s >= 1 & s <= 6){
-    formatC(Values, digits=s, format = "fg", flag = "#")
+    sigfig(Values, s)
   }
   else {
     stop(sQuote(s), " not implemented")
