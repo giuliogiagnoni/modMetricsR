@@ -1,6 +1,6 @@
 Package: modMetricsR
 Title: Model evaluation parameters
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "Giulio",
            family = "Giagnoni",
@@ -8,14 +8,17 @@ Authors@R:
            email = "gigi@anivet.au.dk",
            comment = c(ORCID = "0000-0001-8153-3041"))
 Description: Evaluate models for with a simple line of code and loop through multiple variables and models .
-License: MIT license
+License: MIT License
 Imports:
  epiR,
- ggplot2
+ ggplot2,
+ reshape2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
 Suggests: 
+    dplyr,
+    flextable,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.0.0
